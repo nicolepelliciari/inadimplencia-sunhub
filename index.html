@@ -1,10 +1,203 @@
-<!-- ============================================================
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inadimplência — Ploomes vs Sankhya</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Manrope',sans-serif;background:#1E0C45;color:#fff;padding:32px;min-height:100vh}
+.wrap{max-width:800px;margin:0 auto}
+
+/* HEADER */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid rgba(116,67,246,.2)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-txt{font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.logo-txt span{color:#7443F6}
+.page-date{font-size:11px;color:#C7B0FF}
+
+/* KPIS */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:28px}
+.kpi{padding:14px 16px;border-bottom:2px solid rgba(116,67,246,.25)}
+.kpi.ref{border-bottom-color:#7443F6}
+.kl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#7443F6;margin-bottom:6px}
+.kv{font-size:17px;font-weight:800;color:#fff}
+.kv.a{color:#AB82FF}
+.ks{font-size:10px;color:#C7B0FF;margin-top:3px}
+
+/* SEÇÕES */
+.secs{display:flex;flex-direction:column;gap:2px}
+.sec{border-bottom:1px solid rgba(116,67,246,.12)}
+.sec:last-of-type{border-bottom:none}
+.hdr{display:flex;align-items:center;gap:12px;padding:14px 0;cursor:pointer;user-select:none}
+.hdr:hover .ttl{color:#AB82FF}
+.accent{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:34px}
+.mid{flex:1;min-width:0}
+.ttl{font-size:13px;font-weight:700;color:#fff;transition:color .15s;line-height:1.4}
+.sub{font-size:11px;color:#C7B0FF;margin-top:2px}
+.end{text-align:right;flex-shrink:0}
+.amt{font-size:14px;font-weight:800;color:#fff}
+.cnt{font-size:10px;color:#C7B0FF;margin-top:2px}
+.arr{font-size:10px;color:#7443F6;margin-left:12px;flex-shrink:0;transition:transform .2s;display:inline-block}
+.arr.open{transform:rotate(180deg)}
+.bd{display:none;padding:0 0 20px 16px}
+.bd.vis{display:block}
+.note{font-size:11px;color:#C7B0FF;line-height:1.65;margin-bottom:16px;padding-left:12px;border-left:2px solid rgba(116,67,246,.4)}
+.note b{color:#fff;font-weight:600}
+
+/* CLIENTE BLOCK */
+.cblock{margin-bottom:12px;border:1px solid rgba(116,67,246,.15);border-radius:8px;overflow:hidden}
+.cblock:last-child{margin-bottom:0}
+.chead{padding:10px 14px;background:rgba(116,67,246,.08);display:flex;justify-content:space-between;align-items:flex-start}
+.chead-left .cname{font-size:12px;font-weight:700;color:#fff}
+.chead-left .ccnpj{font-size:10px;color:#7443F6;margin-top:2px;font-family:monospace}
+.ctotal{font-size:12px;font-weight:700;flex-shrink:0;margin-left:8px;color:#fff}
+
+/* COL HEADERS */
+.col-hdr{display:flex;align-items:center;justify-content:space-between;padding:5px 14px;border-bottom:1px solid rgba(116,67,246,.1);background:rgba(0,0,0,.12)}
+.col-hdr-left{display:flex;align-items:center;gap:8px;flex:1}
+.col-hdr-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.ch{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(171,130,255,.5)}
+.ch.pw{width:62px}.ch.rw{width:130px}.ch.nw{flex:1}.ch.vw{width:76px;text-align:right}.ch.tw{width:76px;text-align:right}.ch.sw{width:84px;text-align:right}
+
+/* LINHAS */
+.row{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;border-bottom:1px solid rgba(255,255,255,.04)}
+.row:last-child{border-bottom:none}
+.rl{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.rr{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.pill{font-family:monospace;font-size:10px;background:rgba(116,67,246,.2);border-radius:4px;padding:2px 7px;color:#AB82FF;width:62px;text-align:center;flex-shrink:0}
+.venc{font-size:11px;color:#C7B0FF;width:76px;text-align:right}
+.val{font-size:12px;font-weight:700;color:#fff;width:76px;text-align:right}
+.tag{font-size:9px;font-weight:700;border-radius:20px;padding:2px 9px;width:84px;text-align:center;white-space:nowrap}
+.tg{background:rgba(74,222,128,.1);color:#4ADE80;border:1px solid rgba(74,222,128,.2)}
+.tr{background:rgba(248,113,113,.1);color:#F87171;border:1px solid rgba(248,113,113,.2)}
+
+/* RENEGOCIAÇÃO */
+.reneg-row-hdr{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;cursor:pointer;border-bottom:1px solid rgba(255,255,255,.04);transition:background .15s}
+.reneg-row-hdr:hover{background:rgba(251,146,60,.06)}
+.reneg-row-hdr:last-child{border-bottom:none}
+.reneg-left{display:flex;align-items:center;gap:8px;flex:1}
+.reneg-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.reneg-pill{font-family:monospace;font-size:10px;background:rgba(251,146,60,.15);border-radius:4px;padding:2px 9px;color:#FB923C;flex-shrink:0;white-space:nowrap}
+.reneg-arr{font-size:9px;color:#FB923C;transition:transform .2s;display:inline-block;margin-left:6px}
+.reneg-arr.open{transform:rotate(180deg)}
+.reneg-body{display:none;background:rgba(251,146,60,.03);border-bottom:1px solid rgba(255,255,255,.04)}
+.reneg-body.vis{display:block}
+.reneg-body:last-child{border-bottom:none}
+.sub-col-hdr{display:flex;align-items:center;justify-content:space-between;padding:4px 14px 4px 30px;border-bottom:1px solid rgba(116,67,246,.08);background:rgba(0,0,0,.08)}
+.sub-row{display:flex;align-items:center;justify-content:space-between;padding:6px 14px 6px 30px;border-bottom:1px solid rgba(255,255,255,.03)}
+.sub-row:last-child{border-bottom:none}
+.sub-pill{font-family:monospace;font-size:10px;border-radius:4px;padding:2px 7px;width:62px;text-align:center;flex-shrink:0}
+.sub-pill.ok{background:rgba(74,222,128,.1);color:#4ADE80}
+.sub-pill.open{background:rgba(116,67,246,.2);color:#AB82FF}
+
+/* RECONCILIAÇÃO */
+.rec{margin-top:28px;padding:20px;background:rgba(116,67,246,.06);border:1px solid rgba(116,67,246,.2);border-radius:10px}
+.rec-title{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#7443F6;margin-bottom:12px}
+.rr2{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.rr2:last-child{border-bottom:none;padding-top:10px;margin-top:4px}
+.rl2{font-size:11px;color:#C7B0FF}
+.rv{font-size:11px;font-weight:700}
+.rv.n{color:#F87171}.rv.p{color:#4ADE80}.rv.tot{color:#AB82FF;font-size:13px}
+.rr2.tot .rl2{color:#fff;font-weight:700;font-size:12px}
+
+.footer{margin-top:24px;text-align:center;font-size:10px;color:rgba(171,130,255,.35);padding-top:16px;border-top:1px solid rgba(116,67,246,.1)}
+
+/* STATUS TAGS */
+.tag-ativo{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:rgba(74,222,128,.12);color:#4ADE80;border:1px solid rgba(74,222,128,.25);border-radius:20px;padding:2px 9px}
+.tag-inativo{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:rgba(248,113,113,.12);color:#F87171;border:1px solid rgba(248,113,113,.25);border-radius:20px;padding:2px 9px}
+.tag-global{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:rgba(251,146,60,.12);color:#FB923C;border:1px solid rgba(251,146,60,.25);border-radius:20px;padding:2px 9px}
+.tag-ploomes{display:inline-flex;align-items:center;gap:4px;font-size:9px;font-weight:700;background:rgba(116,67,246,.15);color:#AB82FF;border:1px solid rgba(116,67,246,.3);border-radius:20px;padding:2px 9px}
+
+/* SUBSECOES TOGGLE */
+.subsec{margin-bottom:10px;border:1px solid rgba(255,255,255,.06);border-radius:8px;overflow:hidden}
+.subsec-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;background:rgba(0,0,0,.15);user-select:none}
+.subsec-hdr:hover{background:rgba(0,0,0,.22)}
+.subsec-title{font-size:11px;font-weight:700;color:#fff;display:flex;align-items:center;gap:8px}
+.subsec-meta{font-size:10px;color:#C7B0FF;font-weight:400}
+.subsec-val{font-size:12px;font-weight:800;color:#fff;display:flex;align-items:center;gap:8px}
+.subsec-arr{font-size:10px;color:#7443F6;transition:transform .2s;display:inline-block}
+.subsec-arr.open{transform:rotate(180deg)}
+.subsec-bd{display:none;padding:12px}
+.subsec-bd.vis{display:block}
+
+/* CLIENT BLOCK 2 (compact) */
+.cblock2{margin-bottom:8px;border:1px solid rgba(116,67,246,.12);border-radius:7px;overflow:hidden}
+.cblock2:last-child{margin-bottom:0}
+.nfs-row{padding:6px 14px;display:flex;flex-wrap:wrap;gap:5px;background:rgba(0,0,0,.1)}
+.pill2{font-family:monospace;font-size:10px;background:rgba(116,67,246,.18);border-radius:4px;padding:2px 7px;color:#AB82FF}
+
+.kpis2{margin-top:-18px;margin-bottom:28px;}
+
+.kpi-center{text-align:center}
+.kpis .kpi-center .kl{text-align:center}
+.kpis .kpi-center .kv{text-align:center}
+.kpis .kpi-center .ks{text-align:center}
+.ks-val{font-size:13px;font-weight:800;margin-top:2px;margin-bottom:4px;text-align:center}
+/* Center first KPI row too */
+.kpis .kpi{text-align:center}
+.kpis .kpi .kl{text-align:center}
+.kpis .kpi .kv{text-align:center}
+.kpis .kpi .ks{text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<div class="page-header">
+  <div class="logo">
+    <svg width="32" height="32" viewBox="0 0 36 36" fill="none">
+      <ellipse cx="10" cy="22" rx="6" ry="3.5" transform="rotate(-20 10 22)" fill="#7443F6" opacity=".9"/>
+      <ellipse cx="18" cy="16" rx="8" ry="4" transform="rotate(-20 18 16)" fill="#7443F6"/>
+      <ellipse cx="27" cy="11" rx="6" ry="3" transform="rotate(-20 27 11)" fill="#7443F6" opacity=".8"/>
+    </svg>
+    <div class="logo-txt">pl<span>oo</span>mes</div>
+  </div>
+  <div class="page-date">Relatório de Inadimplência · Análise comparativa Ploomes vs Sankhya</div>
+</div>
+
+<div class="kpis">
+  <div class="kpi ref"><div class="kl">Sankhya — referência</div><div class="kv a">R$ 138.951,64</div><div class="ks">214 títulos · 119 clientes</div></div>
+  <div class="kpi"><div class="kl">Ploomes — ajustar</div><div class="kv">R$ 139.338,73</div><div class="ks">199 NFs · 116 clientes</div></div>
+  <div class="kpi"><div class="kl">Divergência</div><div class="kv">R$ 387,09</div><div class="ks">Ploomes maior que Sankhya</div></div>
+  <div class="kpi"><div class="kl">Causas identificadas</div><div class="kv">3</div><div class="ks">Todas detalhadas abaixo</div></div>
+</div>
+
+<div class="kpis kpis2">
+  <div class="kpi kpi-center" style="border-bottom-color:#4ADE80">
+    <div class="kl" style="color:#4ADE80">Clientes ativos</div>
+    <div class="kv" style="color:#4ADE80">27</div>
+    <div class="ks-val" style="color:#4ADE80">R$&nbsp;37.630,01</div>
+    <div class="ks">&nbsp;</div>
+  </div>
+  <div class="kpi kpi-center" style="border-bottom-color:#F87171">
+    <div class="kl" style="color:#F87171">Bloqueados/Cancelados</div>
+    <div class="kv" style="color:#F87171">92</div>
+    <div class="ks-val" style="color:#F87171">R$&nbsp;101.321,63</div>
+    <div class="ks">&nbsp;</div>
+  </div>
+  <div class="kpi kpi-center" style="border-bottom-color:#FB923C">
+    <div class="kl" style="color:#FB923C">Cobrança — Global</div>
+    <div class="kv" style="color:#FB923C">139</div>
+    <div class="ks-val" style="color:#FB923C">R$&nbsp;81.164,65</div>
+    <div class="ks">65 clientes</div>
+  </div>
+  <div class="kpi kpi-center" style="border-bottom-color:#AB82FF">
+    <div class="kl" style="color:#AB82FF">Cobrança — Ploomes</div>
+    <div class="kv" style="color:#AB82FF">75</div>
+    <div class="ks-val" style="color:#AB82FF">R$&nbsp;57.786,99</div>
+    <div class="ks">57 clientes</div>
+  </div>
+</div><!-- ============================================================
      COLE ESTE BLOCO logo após o fechamento da div.kpis2
      e antes da div.secs
+     Ou seja, procure por:   </div>         (fim do kpis2)
+     e cole tudo abaixo antes de:  <div class="secs">
      ============================================================ -->
 
 <!-- MRR Q1/2026 -->
-<div style="margin-bottom:28px;padding:20px;background:rgba(116,67,246,.06);border:1px solid rgba(116,67,246,.2);border-radius:10px;font-family:'Manrope',sans-serif;">
+<div style="margin-bottom:28px;padding:20px;background:rgba(116,67,246,.06);border:1px solid rgba(116,67,246,.2);border-radius:10px;">
   <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#7443F6;margin-bottom:4px;">Q1 · 2026</div>
   <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:16px;">Inadimplência em relação ao MRR</div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
@@ -14,7 +207,7 @@
       <div style="padding:8px 12px;border-bottom:1px solid rgba(116,67,246,.2);">
         <span style="font-size:11px;font-weight:700;color:#C7B0FF;">Sunhub</span>
       </div>
-      <table style="width:100%;border-collapse:collapse;font-size:11px;font-family:'Manrope',sans-serif;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;">
         <thead><tr>
           <th style="padding:5px 12px;color:rgba(171,130,255,.5);font-weight:600;font-size:9px;text-transform:uppercase;text-align:left;">Mês</th>
           <th style="padding:5px 12px;color:rgba(171,130,255,.5);font-weight:600;font-size:9px;text-transform:uppercase;text-align:right;">MRR</th>
@@ -24,20 +217,20 @@
         <tbody>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Jan</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;175.816</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">R$&nbsp;4.007</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">175.816</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">4.007</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(116,67,246,.2);color:#C7B0FF;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">2,28%</span></td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Fev</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;173.403</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">R$&nbsp;6.034</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">173.403</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">6.034</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(116,67,246,.2);color:#C7B0FF;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">3,48%</span></td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Mar</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;170.399</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">R$&nbsp;33.726</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">170.399</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">33.726</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(220,50,50,.18);color:#f09595;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">19,79%</span></td>
           </tr>
         </tbody>
@@ -50,7 +243,7 @@
         <span style="font-size:11px;font-weight:700;color:#C7B0FF;">Ploomes</span>
         <span style="font-size:9px;color:rgba(171,130,255,.5);margin-left:4px;">excl. Sunhub</span>
       </div>
-      <table style="width:100%;border-collapse:collapse;font-size:11px;font-family:'Manrope',sans-serif;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;">
         <thead><tr>
           <th style="padding:5px 12px;color:rgba(171,130,255,.5);font-weight:600;font-size:9px;text-transform:uppercase;text-align:left;">Mês</th>
           <th style="padding:5px 12px;color:rgba(171,130,255,.5);font-weight:600;font-size:9px;text-transform:uppercase;text-align:right;">MRR</th>
@@ -60,20 +253,20 @@
         <tbody>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Jan</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;5.955.419</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">R$&nbsp;25.365</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">5.955.419</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">25.365</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(116,67,246,.2);color:#C7B0FF;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">0,43%</span></td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Fev</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;6.024.487</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">R$&nbsp;70.677</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">6.024.487</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">70.677</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(116,67,246,.2);color:#C7B0FF;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">1,17%</span></td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Mar</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;6.122.711</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">R$&nbsp;225.481</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">6.122.711</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:600;">225.481</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(220,50,50,.18);color:#f09595;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">3,68%</span></td>
           </tr>
         </tbody>
@@ -85,7 +278,7 @@
       <div style="padding:8px 12px;border-bottom:1px solid rgba(171,130,255,.3);background:rgba(116,67,246,.15);">
         <span style="font-size:11px;font-weight:700;color:#EBE5FF;">Total consolidado</span>
       </div>
-      <table style="width:100%;border-collapse:collapse;font-size:11px;font-family:'Manrope',sans-serif;">
+      <table style="width:100%;border-collapse:collapse;font-size:11px;">
         <thead><tr>
           <th style="padding:5px 12px;color:rgba(171,130,255,.5);font-weight:600;font-size:9px;text-transform:uppercase;text-align:left;">Mês</th>
           <th style="padding:5px 12px;color:rgba(171,130,255,.5);font-weight:600;font-size:9px;text-transform:uppercase;text-align:right;">MRR</th>
@@ -95,20 +288,20 @@
         <tbody>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Jan</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;6.131.235</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:700;">R$&nbsp;29.372</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">6.131.235</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:700;">29.372</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(116,67,246,.2);color:#C7B0FF;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">0,48%</span></td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Fev</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;6.197.890</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:700;">R$&nbsp;76.711</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">6.197.890</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:700;">76.711</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(116,67,246,.2);color:#C7B0FF;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">1,24%</span></td>
           </tr>
           <tr style="border-top:1px solid rgba(255,255,255,.04);">
             <td style="padding:7px 12px;color:#9580b8;">Mar</td>
-            <td style="padding:7px 12px;text-align:right;color:#9580b8;">R$&nbsp;6.293.110</td>
-            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:700;">R$&nbsp;259.207</td>
+            <td style="padding:7px 12px;text-align:right;color:#9580b8;">6.293.110</td>
+            <td style="padding:7px 12px;text-align:right;color:#fff;font-weight:700;">259.207</td>
             <td style="padding:7px 12px;text-align:right;"><span style="background:rgba(220,50,50,.18);color:#f09595;font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;">4,12%</span></td>
           </tr>
         </tbody>
@@ -116,6 +309,934 @@
     </div>
 
   </div>
-  <div style="margin-top:12px;font-size:10px;color:rgba(171,130,255,.4);font-family:'Manrope',sans-serif;">MRR Ploomes = MRR total menos MRR Sunhub. Inadimplência = base Sankhya.</div>
+  <div style="margin-top:12px;font-size:10px;color:rgba(171,130,255,.4);">MRR Ploomes = MRR total menos MRR Sunhub. Inadimplência = base Sankhya.</div>
 </div>
 <!-- /MRR Q1/2026 -->
+
+<div class="secs">
+
+<!-- S1 -->
+<div class="sec">
+  <div class="hdr" onclick="tog('s1')">
+    <div class="accent" style="background:#FBBF24"></div>
+    <div class="mid"><div class="ttl">Títulos com baixa indevida no Ploomes</div><div class="sub">Consta como pago no Ploomes — sem registro de baixa no Sankhya</div></div>
+    <div class="end"><div class="amt">− R$ 3.663,83</div><div class="cnt">14 títulos · Sankhya maior</div></div>
+    <span class="arr" id="a-s1">▼</span>
+  </div>
+  <div class="bd" id="s1">
+    <div class="note">Estes títulos constam como pagos no Ploomes, porém o Sankhya não registra nenhuma baixa financeira. O status no Ploomes está incorreto e deve ser revertido para inadimplente em cada NF listada abaixo.</div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">AVM Engenharia Ltda</div><div class="ccnpj">34.358.939/0001-44</div></div><span class="ctotal">R$ 1.097,94</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">71960</span></div><div class="rr"><span class="venc">18/03/2024</span><span class="val">R$ 180,00</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">73954</span></div><div class="rr"><span class="venc">17/04/2024</span><span class="val">R$ 180,00</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">75948</span></div><div class="rr"><span class="venc">16/05/2024</span><span class="val">R$ 180,00</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">77981</span></div><div class="rr"><span class="venc">17/06/2024</span><span class="val">R$ 241,94</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">80053</span></div><div class="rr"><span class="venc">16/07/2024</span><span class="val">R$ 316,00</span></div></div>
+    </div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">Conexão Energia Ltda</div><div class="ccnpj">15.020.896/0001-48</div></div><span class="ctotal">R$ 1.080,00</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">71889</span></div><div class="rr"><span class="venc">18/03/2024</span><span class="val">R$ 180,00</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">73892</span></div><div class="rr"><span class="venc">16/04/2024</span><span class="val">R$ 180,00</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">75884</span></div><div class="rr"><span class="venc">15/05/2024</span><span class="val">R$ 180,00</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">77908</span></div><div class="rr"><span class="venc">17/06/2024</span><span class="val">R$ 180,00</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">79977</span></div><div class="rr"><span class="venc">15/07/2024</span><span class="val">R$ 180,00</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">82045</span></div><div class="rr"><span class="venc">15/08/2024</span><span class="val">R$ 180,00</span></div></div>
+    </div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">Ferreira Leite Comércio e Serviços Ltda</div><div class="ccnpj">38.210.932/0001-31</div></div><span class="ctotal">R$ 438,90</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">89214</span></div><div class="rr"><span class="venc">10/10/2025</span><span class="val">R$ 438,90</span></div></div>
+    </div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">João Felipe Rodrigues Ltda</div><div class="ccnpj">40.134.613/0001-36</div></div><span class="ctotal">R$ 649,50</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">87058</span></div><div class="rr"><span class="venc">20/09/2024</span><span class="val">R$ 649,50</span></div></div>
+    </div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">LS Projetos e Construções Ltda</div><div class="ccnpj">24.989.673/0001-84</div></div><span class="ctotal">R$ 397,49</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">96984</span></div><div class="rr"><span class="venc">10/10/2025</span><span class="val">R$ 397,49</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- S2 -->
+<div class="sec">
+  <div class="hdr" onclick="tog('s2')">
+    <div class="accent" style="background:#F87171"></div>
+    <div class="mid"><div class="ttl">Clientes não categorizados como Sunhub no Ploomes</div><div class="sub">Títulos presentes no Sankhya sem correspondência no Ploomes</div></div>
+    <div class="end"><div class="amt">− R$ 2.644,18</div><div class="cnt">5 títulos · Sankhya maior</div></div>
+    <span class="arr" id="a-s2">▼</span>
+  </div>
+  <div class="bd" id="s2">
+    <div class="note">O Sankhya possui títulos em aberto para estes clientes, porém não há correspondência no Ploomes pois o cliente não está categorizado como Sunhub. Enquanto o cadastro não for corrigido, esses valores não aparecem na inadimplência do Ploomes.</div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">Clima e Energia Ar-Condicionado Ltda</div><div class="ccnpj">25.390.769/0001-94</div></div><span class="ctotal">R$ 1.277,19</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">62563</span></div><div class="rr"><span class="venc">24/08/2023</span><span class="val">R$ 1.277,19</span></div></div>
+    </div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">ERS Energia Solar Ltda</div><div class="ccnpj">21.665.020/0001-51</div></div><span class="ctotal">R$ 400,00</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">89277</span></div><div class="rr"><span class="venc">04/10/2024</span><span class="val">R$ 400,00</span></div></div>
+    </div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">TM Energia Solar Ltda</div><div class="ccnpj">11.828.665/0001-04</div></div><span class="ctotal">R$ 387,00</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">112162</span></div><div class="rr"><span class="venc">25/06/2025</span><span class="val">R$ 387,00</span></div></div>
+    </div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">Locaenergy Ltda</div><div class="ccnpj">55.675.931/0001-81</div></div><span class="ctotal">R$ 354,99</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">123477</span></div><div class="rr"><span class="venc">06/11/2025</span><span class="val">R$ 354,99</span></div></div>
+    </div>
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">B3N Ltda</div><div class="ccnpj">57.183.803/0001-46</div></div><span class="ctotal">R$ 225,00</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+      <div class="row"><div class="rl"><span class="pill">134224</span></div><div class="rr"><span class="venc">16/03/2026</span><span class="val">R$ 225,00</span></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- S3 -->
+<div class="sec">
+  <div class="hdr" onclick="tog('s3')">
+    <div class="accent" style="background:#FB923C"></div>
+    <div class="mid"><div class="ttl">Renegociações — Ploomes não reflete o Sankhya</div><div class="sub">Parcelamentos feitos no Sankhya não são replicados no Ploomes</div></div>
+    <div class="end"><div class="amt">+ R$ 6.350,30</div><div class="cnt">6 NFs · Ploomes maior</div></div>
+    <span class="arr" id="a-s3">▼</span>
+  </div>
+  <div class="bd" id="s3">
+    <div class="note">O Ploomes não reflete renegociações feitas no Sankhya. Qualquer NF renegociada gera divergência de valor ou status — o Ploomes sempre mantém o registro original da NF. Abaixo os dois cenários identificados.</div>
+
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">Inversion Energia Inteligente</div><div class="ccnpj">36.694.674/0001-80</div></div><span class="ctotal" style="color:#4ADE80">Pago no SK</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch rw">Renegociação</span></div><div class="col-hdr-right"><span class="ch sw">Status SK</span><span class="ch tw">Total</span></div></div>
+      <div class="reneg-row-hdr" onclick="togr('r_inv')">
+        <div class="reneg-left"><span class="reneg-pill">Renegociação 19708</span><span class="reneg-arr" id="ra-r_inv">▼</span></div>
+        <div class="reneg-right"><span class="tag tg">Pago no SK</span><span class="val">R$ 4.902,00</span></div>
+      </div>
+      <div class="reneg-body" id="r_inv">
+        <div class="sub-col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+        <div class="sub-row"><div class="rl"><span class="pill">103096</span></div><div class="rr"><span class="venc">22/09/2025</span><span class="val">R$ 1.806,00</span></div></div>
+        <div class="sub-row"><div class="rl"><span class="pill">108113</span></div><div class="rr"><span class="venc">22/09/2025</span><span class="val">R$ 1.548,00</span></div></div>
+        <div class="sub-row"><div class="rl"><span class="pill">108444</span></div><div class="rr"><span class="venc">22/09/2025</span><span class="val">R$ 1.548,00</span></div></div>
+      </div>
+    </div>
+
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">Sol Norte Construtora e Energia Solar</div><div class="ccnpj">13.667.291/0001-18</div></div><span class="ctotal" style="color:#4ADE80">Pago no SK</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch rw">Renegociação</span></div><div class="col-hdr-right"><span class="ch sw">Status SK</span><span class="ch tw">Total</span></div></div>
+      <div class="reneg-row-hdr" onclick="togr('r_sol')">
+        <div class="reneg-left"><span class="reneg-pill">Renegociação 19195</span><span class="reneg-arr" id="ra-r_sol">▼</span></div>
+        <div class="reneg-right"><span class="tag tg">Pago no SK</span><span class="val">R$ 1.198,80</span></div>
+      </div>
+      <div class="reneg-body" id="r_sol">
+        <div class="sub-col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span><span style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:rgba(171,130,255,.5);margin-left:8px">Status Ploomes</span></div><div class="col-hdr-right"><span class="ch tw">Valor</span></div></div>
+        <div class="sub-row"><div class="rl"><span class="sub-pill ok">95789</span><span style="font-size:10px;color:#4ADE80;margin-left:8px">Pago</span></div><div class="rr"><span class="val" style="color:#C7B0FF;font-weight:400">—</span></div></div>
+        <div class="sub-row"><div class="rl"><span class="sub-pill ok">101004</span><span style="font-size:10px;color:#4ADE80;margin-left:8px">Pago</span></div><div class="rr"><span class="val" style="color:#C7B0FF;font-weight:400">—</span></div></div>
+        <div class="sub-row"><div class="rl"><span class="sub-pill open">103155</span><span style="font-size:10px;color:#F87171;margin-left:8px">Em aberto — ajustar no Ploomes</span></div><div class="rr"><span class="val">R$ 1.198,80</span></div></div>
+      </div>
+    </div>
+
+    <div class="cblock">
+      <div class="chead"><div class="chead-left"><div class="cname">Dias Solar</div><div class="ccnpj">41.732.904/0001-99</div></div><span class="ctotal" style="color:#F87171">Em aberto</span></div>
+      <div class="col-hdr"><div class="col-hdr-left"><span class="ch rw">Renegociação</span></div><div class="col-hdr-right"><span class="ch sw">Status SK</span><span class="ch tw">Total</span></div></div>
+      <div class="reneg-row-hdr" onclick="togr('r_dias')">
+        <div class="reneg-left"><span class="reneg-pill">Renegociação 19334</span><span class="reneg-arr" id="ra-r_dias">▼</span></div>
+        <div class="reneg-right"><span class="tag tr">Em aberto</span><span class="val">R$ 249,50</span></div>
+      </div>
+      <div class="reneg-body" id="r_dias">
+        <div class="sub-col-hdr"><div class="col-hdr-left"><span class="ch pw">NF</span></div><div class="col-hdr-right"><span class="ch vw">Vencimento</span><span class="ch tw">Valor</span></div></div>
+        <div class="sub-row"><div class="rl"><span class="pill">95727</span></div><div class="rr"><span class="venc">16/12/2024</span><span class="val">R$ 149,70</span></div></div>
+        <div class="sub-row"><div class="rl"><span class="pill">103338</span></div><div class="rr"><span class="venc">17/03/2025</span><span class="val">R$ 99,80</span></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S4: STATUS ATIVO/INATIVO -->
+<div class="sec">
+  <div class="hdr" onclick="tog('s4')">
+    <div class="accent" style="background:#4ADE80"></div>
+    <div class="mid"><div class="ttl">Status dos clientes inadimplentes na Sunhub</div><div class="sub">Ativos vs Bloqueados/Cancelados na carteira Sunhub</div></div>
+    <div class="end"><div class="amt">119 clientes</div><div class="cnt">26 ativos · 83 bloqueados</div></div>
+    <span class="arr" id="a-s4">▼</span>
+  </div>
+  <div class="bd" id="s4">
+    <div class="note">Cruzamento da inadimplência (Sankhya) com a carteira Sunhub. Clientes <b>ativos</b> têm maior urgência de cobrança. Clientes <b>bloqueados/cancelados</b> devem ter tratamento diferenciado — avaliar se a dívida ainda é exigível ou já foi baixada por churn.</div>
+
+    <div class="subsec">
+      <div class="subsec-hdr" onclick="togs('ss_ativos')">
+        <div class="subsec-title"><span class="tag-ativo">🟢 Ativos</span> <span class="subsec-meta">26 clientes</span></div>
+        <div class="subsec-val">R$&#160;35.052,01 <span class="subsec-arr" id="sa-ss_ativos">▼</span></div>
+      </div>
+      <div class="subsec-bd" id="ss_ativos">
+        <div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">R.V. ENERGIA COMERCIO DE EQUIPAMENTOS ELETRICOS LTDA</div><div class="ccnpj">36.157.179/0001-32</div></div><span class="ctotal">R$ 17.591,24</span></div>
+      <div class="nfs-row"><span class="pill2">136127</span><span class="pill2">136277</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">Z L ENGENHARIA ELETRICA LTDA</div><div class="ccnpj">31.719.401/0001-20</div></div><span class="ctotal">R$ 1.698,30</span></div>
+      <div class="nfs-row"><span class="pill2">134321</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">EFICIENCIA ENERGETICA LTDA</div><div class="ccnpj">31.418.206/0001-60</div></div><span class="ctotal">R$ 1.617,19</span></div>
+      <div class="nfs-row"><span class="pill2">132115</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FERREIRA LEITE COMERCIO E SERVICOS LTDA</div><div class="ccnpj">38.210.932/0001-31</div></div><span class="ctotal">R$ 1.270,98</span></div>
+      <div class="nfs-row"><span class="pill2">89214</span><span class="pill2">136790</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">3F ENERGY SOLUCOES EM INSTALACOES ELETRICAS LTDA</div><div class="ccnpj">41.975.410/0001-35</div></div><span class="ctotal">R$ 1.171,68</span></div>
+      <div class="nfs-row"><span class="pill2">122271</span><span class="pill2">124593</span><span class="pill2">127281</span><span class="pill2">129990</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">STORM ELETRICA LTDA</div><div class="ccnpj">45.029.414/0001-81</div></div><span class="ctotal">R$ 1.039,20</span></div>
+      <div class="nfs-row"><span class="pill2">134157</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLARM PROJETOS E INSTALACOES DE SISTEMAS FOTOVOLTAICOS SOCIEDADE UNIPESSO</div><div class="ccnpj">24.476.088/0001-80</div></div><span class="ctotal">R$ 1.007,76</span></div>
+      <div class="nfs-row"><span class="pill2">135251</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">NOROESTE ENERGIA SOLAR E SOLUCOES ELETRICAS LTDA</div><div class="ccnpj">34.875.459/0001-50</div></div><span class="ctotal">R$ 990,00</span></div>
+      <div class="nfs-row"><span class="pill2">137028</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">GREENERGY COMERCIO E SERVICOS LTDA</div><div class="ccnpj">30.930.114/0001-00</div></div><span class="ctotal">R$ 839,30</span></div>
+      <div class="nfs-row"><span class="pill2">136605</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LS PROJETOS E CONSTRUCOES LTDA</div><div class="ccnpj">24.989.673/0001-84</div></div><span class="ctotal">R$ 787,19</span></div>
+      <div class="nfs-row"><span class="pill2">96984</span><span class="pill2">137151</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLAR ADVANCE ENERGIA SOLAR FOTOVOLTAICA LTDA</div><div class="ccnpj">19.811.112/0001-50</div></div><span class="ctotal">R$ 758,13</span></div>
+      <div class="nfs-row"><span class="pill2">92708</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">GLOBAL SOLAR LTDA</div><div class="ccnpj">27.741.758/0001-37</div></div><span class="ctotal">R$ 726,63</span></div>
+      <div class="nfs-row"><span class="pill2">133681</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">MULTI+ ENGENHARIA LTDA</div><div class="ccnpj">49.783.337/0001-01</div></div><span class="ctotal">R$ 599,50</span></div>
+      <div class="nfs-row"><span class="pill2">136482</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">D. H. Z. SOLUCOES ELETRICAS LTDA.</div><div class="ccnpj">37.485.842/0001-90</div></div><span class="ctotal">R$ 594,00</span></div>
+      <div class="nfs-row"><span class="pill2">137150</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PROJETO ENERGIA</div><div class="ccnpj">31.780.774/0001-06</div></div><span class="ctotal">R$ 549,25</span></div>
+      <div class="nfs-row"><span class="pill2">136632</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">META SUN INSTALACOES ELETRICAS LTDA</div><div class="ccnpj">41.452.412/0001-40</div></div><span class="ctotal">R$ 479,60</span></div>
+      <div class="nfs-row"><span class="pill2">137168</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">EXPRESSAO SOLAR MATERIAIS ELETRICOS LTDA</div><div class="ccnpj">22.415.628/0001-90</div></div><span class="ctotal">R$ 450,00</span></div>
+      <div class="nfs-row"><span class="pill2">133850</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DIRECT SOLAR FOTOVOLTAICO LTDA</div><div class="ccnpj">42.268.999/0001-02</div></div><span class="ctotal">R$ 407,46</span></div>
+      <div class="nfs-row"><span class="pill2">135195</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">BARBOSA E BARBOSA ENGENHARIA ELETRICA LTDA</div><div class="ccnpj">02.309.061/0001-60</div></div><span class="ctotal">R$ 389,70</span></div>
+      <div class="nfs-row"><span class="pill2">137759</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PANTANAL ENGENHARIA LTDA</div><div class="ccnpj">27.109.572/0001-60</div></div><span class="ctotal">R$ 389,70</span></div>
+      <div class="nfs-row"><span class="pill2">133463</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">N SOL FRANCHISING E LICENCIAMENTO LTDA</div><div class="ccnpj">56.152.186/0001-59</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">137237</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">RENOVAVEL FOTOVOLTAICO</div><div class="ccnpj">42.219.869/0001-71</div></div><span class="ctotal">R$ 357,00</span></div>
+      <div class="nfs-row"><span class="pill2">136633</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ARUNA ENERGIA</div><div class="ccnpj">26.186.708/0001-72</div></div><span class="ctotal">R$ 354,00</span></div>
+      <div class="nfs-row"><span class="pill2">136264</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ALESSANDRO ROGERIO JUNIOR</div><div class="ccnpj">35.432.562/0001-99</div></div><span class="ctotal">R$ 299,70</span></div>
+      <div class="nfs-row"><span class="pill2">133782</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">B3N LTDA</div><div class="ccnpj">57.183.803/0001-46</div></div><span class="ctotal">R$ 225,00</span></div>
+      <div class="nfs-row"><span class="pill2">134224</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">19.332.713 DANILO DE OLIVEIRA LIMA</div><div class="ccnpj">19.332.713/0001-80</div></div><span class="ctotal">R$ 99,80</span></div>
+      <div class="nfs-row"><span class="pill2">134062</span></div>
+    </div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <div class="subsec-hdr" onclick="togs('ss_inativos')">
+        <div class="subsec-title"><span class="tag-inativo">🔴 Bloqueados/Cancelados</span> <span class="subsec-meta">83 clientes</span></div>
+        <div class="subsec-val">R$&#160;92.342,39 <span class="subsec-arr" id="sa-ss_inativos">▼</span></div>
+      </div>
+      <div class="subsec-bd" id="ss_inativos">
+        <div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLARE BIOENERGIA LTDA</div><div class="ccnpj">28.053.504/0001-99</div></div><span class="ctotal">R$ 5.070,00</span></div>
+      <div class="nfs-row"><span class="pill2">104039</span><span class="pill2">106746</span><span class="pill2">110529</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DEYE BRASIL DISTRIBUTION CENTER LTDA</div><div class="ccnpj">51.200.609/0001-45</div></div><span class="ctotal">R$ 4.223,40</span></div>
+      <div class="nfs-row"><span class="pill2">104824</span><span class="pill2">108062</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLLAR INVEST ENERGIAS RENOVAVEIS LTDA</div><div class="ccnpj">43.712.088/0001-87</div></div><span class="ctotal">R$ 4.000,00</span></div>
+      <div class="nfs-row"><span class="pill2">90782</span><span class="pill2">90832</span><span class="pill2">92086</span><span class="pill2">97221</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AMPERE SOLUCOES LTDA</div><div class="ccnpj">41.955.830/0001-50</div></div><span class="ctotal">R$ 3.626,70</span></div>
+      <div class="nfs-row"><span class="pill2">105043</span><span class="pill2">108116</span><span class="pill2">110477</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AP SOLAR LTDA</div><div class="ccnpj">46.402.282/0001-54</div></div><span class="ctotal">R$ 3.346,20</span></div>
+      <div class="nfs-row"><span class="pill2">98283</span><span class="pill2">98290</span><span class="pill2">100831</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ANSELMO B BORGES SERVICOS E COMERCIO LTDA</div><div class="ccnpj">33.900.729/0001-73</div></div><span class="ctotal">R$ 2.697,30</span></div>
+      <div class="nfs-row"><span class="pill2">93170</span><span class="pill2">95826</span><span class="pill2">103400</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AVM ENGENHARIA LTDA</div><div class="ccnpj">34.358.939/0001-44</div></div><span class="ctotal">R$ 2.694,36</span></div>
+      <div class="nfs-row"><span class="pill2">71960</span><span class="pill2">73954</span><span class="pill2">75948</span><span class="pill2">77981</span><span class="pill2">80053</span><span class="pill2">94348</span><span class="pill2">98970</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">INVICTA SOLAR LTDA</div><div class="ccnpj">39.823.412/0001-67</div></div><span class="ctotal">R$ 2.614,05</span></div>
+      <div class="nfs-row"><span class="pill2">97054</span><span class="pill2">112105</span><span class="pill2">115884</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ANGRAENERGY COMERCIO E SERVICOS DE ENERGIA LTDA</div><div class="ccnpj">40.763.406/0001-40</div></div><span class="ctotal">R$ 2.502,00</span></div>
+      <div class="nfs-row"><span class="pill2">90786</span><span class="pill2">90830</span><span class="pill2">90854</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLARIUM ENERGIA SOLAR PIUMHI LTDA</div><div class="ccnpj">35.770.526/0001-35</div></div><span class="ctotal">R$ 2.340,03</span></div>
+      <div class="nfs-row"><span class="pill2">127538</span><span class="pill2">130091</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ERS ENERGIA SOLAR LTDA</div><div class="ccnpj">21.665.020/0001-51</div></div><span class="ctotal">R$ 2.148,39</span></div>
+      <div class="nfs-row"><span class="pill2">89277</span><span class="pill2">89280</span><span class="pill2">90730</span><span class="pill2">93345</span><span class="pill2">98212</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DRX COMPANY LTDA</div><div class="ccnpj">46.873.512/0001-63</div></div><span class="ctotal">R$ 2.098,50</span></div>
+      <div class="nfs-row"><span class="pill2">92317</span><span class="pill2">94872</span><span class="pill2">97314</span><span class="pill2">98227</span><span class="pill2">102302</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FESOL ENERGIA SOLAR COMERCIO E SERVICOS LTDA</div><div class="ccnpj">36.461.405/0001-74</div></div><span class="ctotal">R$ 2.065,80</span></div>
+      <div class="nfs-row"><span class="pill2">118850</span><span class="pill2">121529</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLAR CITY BSB COMERCIO E SERVICO LTDA</div><div class="ccnpj">49.060.751/0001-92</div></div><span class="ctotal">R$ 1.758,40</span></div>
+      <div class="nfs-row"><span class="pill2">102410</span><span class="pill2">105140</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ENG MIL EIRELI</div><div class="ccnpj">27.310.207/0001-19</div></div><span class="ctotal">R$ 1.710,00</span></div>
+      <div class="nfs-row"><span class="pill2">90468</span><span class="pill2">90531</span><span class="pill2">91528</span><span class="pill2">94116</span><span class="pill2">99000</span><span class="pill2">101657</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">BRC SOLAR</div><div class="ccnpj">23.093.608/0001-03</div></div><span class="ctotal">R$ 1.680,00</span></div>
+      <div class="nfs-row"><span class="pill2">107683</span><span class="pill2">110312</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">MT SOLAR - LTDA</div><div class="ccnpj">44.702.864/0001-20</div></div><span class="ctotal">R$ 1.662,61</span></div>
+      <div class="nfs-row"><span class="pill2">109595</span><span class="pill2">113404</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">C S SIMOES ENERGIA SOLAR</div><div class="ccnpj">24.477.429/0001-32</div></div><span class="ctotal">R$ 1.490,00</span></div>
+      <div class="nfs-row"><span class="pill2">132224</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">J FERREIRA DA SILVA LTDA</div><div class="ccnpj">13.667.291/0001-18</div></div><span class="ctotal">R$ 1.398,60</span></div>
+      <div class="nfs-row"><span class="pill2">113883</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ILUMINA ENERGIA SOLAR</div><div class="ccnpj">34.858.785/0001-50</div></div><span class="ctotal">R$ 1.352,30</span></div>
+      <div class="nfs-row"><span class="pill2">133703</span><span class="pill2">135158</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">JOAO FELIPE RODRIGUES LTDA</div><div class="ccnpj">40.134.613/0001-36</div></div><span class="ctotal">R$ 1.299,00</span></div>
+      <div class="nfs-row"><span class="pill2">87058</span><span class="pill2">89263</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">CLIMA E ENERGIA AR-CONDICIONADO LTDA</div><div class="ccnpj">25.390.769/0001-94</div></div><span class="ctotal">R$ 1.277,19</span></div>
+      <div class="nfs-row"><span class="pill2">62563</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">R R P CARDOSO LTDA</div><div class="ccnpj">31.285.385/0001-04</div></div><span class="ctotal">R$ 1.269,67</span></div>
+      <div class="nfs-row"><span class="pill2">91278</span><span class="pill2">93829</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">TEUSOLAR ENERGIA FOTOVOLTAICA LTDA</div><div class="ccnpj">55.171.465/0001-05</div></div><span class="ctotal">R$ 1.253,52</span></div>
+      <div class="nfs-row"><span class="pill2">130401</span><span class="pill2">133120</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ECOTOP ENERGIA RENOVAVEIS LTDA</div><div class="ccnpj">41.350.947/0001-00</div></div><span class="ctotal">R$ 1.174,69</span></div>
+      <div class="nfs-row"><span class="pill2">134101</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">GAEL ENERGIA LTDA</div><div class="ccnpj">19.864.490/0001-00</div></div><span class="ctotal">R$ 1.150,46</span></div>
+      <div class="nfs-row"><span class="pill2">107179</span><span class="pill2">110278</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">CONEXAO ENERGIA LTDA</div><div class="ccnpj">15.020.896/0001-48</div></div><span class="ctotal">R$ 1.080,00</span></div>
+      <div class="nfs-row"><span class="pill2">71889</span><span class="pill2">73892</span><span class="pill2">75884</span><span class="pill2">77908</span><span class="pill2">79977</span><span class="pill2">82045</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">BR SOLAR LTDA</div><div class="ccnpj">49.887.072/0001-91</div></div><span class="ctotal">R$ 1.080,00</span></div>
+      <div class="nfs-row"><span class="pill2">90295</span><span class="pill2">90738</span><span class="pill2">92136</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">CARLOS HENRIQUE TORRES SIMINO - MANUTENCAO ELETRICA</div><div class="ccnpj">28.721.776/0001-10</div></div><span class="ctotal">R$ 1.079,10</span></div>
+      <div class="nfs-row"><span class="pill2">90480</span><span class="pill2">90481</span><span class="pill2">91430</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LOCAENERGY LTDA</div><div class="ccnpj">55.675.931/0001-81</div></div><span class="ctotal">R$ 1.074,39</span></div>
+      <div class="nfs-row"><span class="pill2">103478</span><span class="pill2">108196</span><span class="pill2">123477</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">JOAO PEDRO GOMES ALBUQUERQUE</div><div class="ccnpj">53.419.781/0001-10</div></div><span class="ctotal">R$ 1.039,20</span></div>
+      <div class="nfs-row"><span class="pill2">122169</span><span class="pill2">124605</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">D CARLOS RIGGO SERVICOS ELETRICOS LTDA</div><div class="ccnpj">33.387.058/0001-99</div></div><span class="ctotal">R$ 1.032,00</span></div>
+      <div class="nfs-row"><span class="pill2">106120</span><span class="pill2">108747</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DLX ENERGIA SOLAR LTDA</div><div class="ccnpj">22.793.672/0001-34</div></div><span class="ctotal">R$ 999,00</span></div>
+      <div class="nfs-row"><span class="pill2">123635</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PLANTAE SOLUCOES LTDA</div><div class="ccnpj">38.927.884/0001-05</div></div><span class="ctotal">R$ 990,00</span></div>
+      <div class="nfs-row"><span class="pill2">133434</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">M SERGIO DE OLIVEIRA - REPRESENTACOES</div><div class="ccnpj">23.922.758/0001-82</div></div><span class="ctotal">R$ 986,40</span></div>
+      <div class="nfs-row"><span class="pill2">89897</span><span class="pill2">92349</span><span class="pill2">97334</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLLTECH ENERGIA SOLAR EIRELI</div><div class="ccnpj">36.716.838/0001-23</div></div><span class="ctotal">R$ 973,00</span></div>
+      <div class="nfs-row"><span class="pill2">92397</span><span class="pill2">104635</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUNERGY SOLAR LTDA</div><div class="ccnpj">35.964.913/0001-02</div></div><span class="ctotal">R$ 919,68</span></div>
+      <div class="nfs-row"><span class="pill2">91161</span><span class="pill2">100376</span><span class="pill2">102897</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">BDL COMERCIAL IMPORTADORA E EXPORTADORA LTDA</div><div class="ccnpj">23.792.191/0001-77</div></div><span class="ctotal">R$ 840,00</span></div>
+      <div class="nfs-row"><span class="pill2">107682</span><span class="pill2">107684</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">NEXA ENERGIA SOLAR E ENGENHARIA LTDA</div><div class="ccnpj">35.339.576/0001-62</div></div><span class="ctotal">R$ 802,74</span></div>
+      <div class="nfs-row"><span class="pill2">113914</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">123 SOLAR ALTA FLORESTA LTDA</div><div class="ccnpj">48.367.729/0001-27</div></div><span class="ctotal">R$ 779,40</span></div>
+      <div class="nfs-row"><span class="pill2">105891</span><span class="pill2">111185</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">M L MOREIRA LTDA</div><div class="ccnpj">46.511.724/0001-09</div></div><span class="ctotal">R$ 779,40</span></div>
+      <div class="nfs-row"><span class="pill2">105570</span><span class="pill2">106580</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">3P ENGENHARIA LTDA</div><div class="ccnpj">53.724.559/0001-20</div></div><span class="ctotal">R$ 774,00</span></div>
+      <div class="nfs-row"><span class="pill2">123038</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ECOBOX SOLUCOES ENERGETICAS LTDA</div><div class="ccnpj">30.815.626/0001-17</div></div><span class="ctotal">R$ 750,00</span></div>
+      <div class="nfs-row"><span class="pill2">130987</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">T BISPO DA CONCEICAO</div><div class="ccnpj">31.541.650/0001-78</div></div><span class="ctotal">R$ 723,30</span></div>
+      <div class="nfs-row"><span class="pill2">133058</span><span class="pill2">134931</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUN POWER SOLUCOES RENOVAVEIS LTDA</div><div class="ccnpj">21.041.325/0001-92</div></div><span class="ctotal">R$ 720,00</span></div>
+      <div class="nfs-row"><span class="pill2">131664</span><span class="pill2">134069</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">N E N INSTALACAO E MANUTENCAO ELETRICA LTDA.</div><div class="ccnpj">27.443.471/0001-20</div></div><span class="ctotal">R$ 719,40</span></div>
+      <div class="nfs-row"><span class="pill2">106207</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AURINKKO ENERGIA E TECNOLOGIA</div><div class="ccnpj">32.732.114/0001-12</div></div><span class="ctotal">R$ 714,00</span></div>
+      <div class="nfs-row"><span class="pill2">90618</span><span class="pill2">93116</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">VERT ENERGIE COMERCIO E SERVICOS ELETRICOS LTDA</div><div class="ccnpj">45.517.241/0001-40</div></div><span class="ctotal">R$ 695,52</span></div>
+      <div class="nfs-row"><span class="pill2">132849</span><span class="pill2">134909</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">R S DE ARAUJO JUNIOR - SMA ENERGY SOLUTIONS</div><div class="ccnpj">41.705.717/0001-16</div></div><span class="ctotal">R$ 659,40</span></div>
+      <div class="nfs-row"><span class="pill2">99428</span><span class="pill2">102007</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FF GRANSOLAR ENGENHARIA LTDA</div><div class="ccnpj">34.164.473/0001-46</div></div><span class="ctotal">R$ 645,00</span></div>
+      <div class="nfs-row"><span class="pill2">124779</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">RP ENERGIA RENOVAVEL LTDA</div><div class="ccnpj">27.252.123/0001-76</div></div><span class="ctotal">R$ 630,00</span></div>
+      <div class="nfs-row"><span class="pill2">120929</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ALVES SOLAR ENERGY LTDA</div><div class="ccnpj">47.815.149/0001-92</div></div><span class="ctotal">R$ 600,00</span></div>
+      <div class="nfs-row"><span class="pill2">107922</span><span class="pill2">108117</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ENERGIZE FOTOVOLTAICO LTDA</div><div class="ccnpj">12.367.788/0001-58</div></div><span class="ctotal">R$ 599,50</span></div>
+      <div class="nfs-row"><span class="pill2">93212</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">EVOLUSOL ENERGIA SOLAR LTDA</div><div class="ccnpj">40.062.597/0002-02</div></div><span class="ctotal">R$ 599,50</span></div>
+      <div class="nfs-row"><span class="pill2">111128</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">CEARA ENERGY SOLUCOES EM ENERGIAS LTDA</div><div class="ccnpj">34.092.904/0001-06</div></div><span class="ctotal">R$ 599,40</span></div>
+      <div class="nfs-row"><span class="pill2">93452</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ENEX ENERGIA SOLAR LTDA</div><div class="ccnpj">40.317.354/0001-89</div></div><span class="ctotal">R$ 594,00</span></div>
+      <div class="nfs-row"><span class="pill2">130460</span><span class="pill2">133173</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">RODRIGO FREITAS COELHO</div><div class="ccnpj">28.554.323/0001-46</div></div><span class="ctotal">R$ 519,60</span></div>
+      <div class="nfs-row"><span class="pill2">109444</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ASS ENGENHARIA LTDA</div><div class="ccnpj">23.485.083/0001-51</div></div><span class="ctotal">R$ 499,50</span></div>
+      <div class="nfs-row"><span class="pill2">126388</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LEAO SOLAR LTDA</div><div class="ccnpj">54.671.389/0001-26</div></div><span class="ctotal">R$ 479,60</span></div>
+      <div class="nfs-row"><span class="pill2">98119</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUN COAST MATERIAIS ELETRICOS E ENERGIA SOLAR LTDA</div><div class="ccnpj">47.864.839/0001-31</div></div><span class="ctotal">R$ 468,90</span></div>
+      <div class="nfs-row"><span class="pill2">125922</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PHP SOLAR LTDA</div><div class="ccnpj">47.660.052/0001-58</div></div><span class="ctotal">R$ 450,00</span></div>
+      <div class="nfs-row"><span class="pill2">101363</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SAMUEL MENDES DIAS 43323300807</div><div class="ccnpj">41.732.904/0001-99</div></div><span class="ctotal">R$ 427,49</span></div>
+      <div class="nfs-row"><span class="pill2">93906</span><span class="pill2">119758</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PRO SOLAR INSTALACOES E MANUTENCAO DE EQUIPAMENTOS ELET</div><div class="ccnpj">33.333.259/0001-03</div></div><span class="ctotal">R$ 408,51</span></div>
+      <div class="nfs-row"><span class="pill2">135157</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LUX ECO SOLUTIONS E ENERGY LTDA</div><div class="ccnpj">51.726.687/0001-88</div></div><span class="ctotal">R$ 400,00</span></div>
+      <div class="nfs-row"><span class="pill2">120976</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LWL ENERGIA SOLAR E INSTALACAO ELETRICA LTDA</div><div class="ccnpj">57.074.787/0001-53</div></div><span class="ctotal">R$ 389,70</span></div>
+      <div class="nfs-row"><span class="pill2">97261</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">TM ENERGIA SOLAR LTDA</div><div class="ccnpj">11.828.665/0001-04</div></div><span class="ctotal">R$ 387,00</span></div>
+      <div class="nfs-row"><span class="pill2">112162</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">37.765.413 ISLA CARLA REGO SANTOS</div><div class="ccnpj">37.765.413/0001-77</div></div><span class="ctotal">R$ 387,00</span></div>
+      <div class="nfs-row"><span class="pill2">121753</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">47.590.677 ANA KEZIA DE LIMA SILVA</div><div class="ccnpj">47.590.677/0001-90</div></div><span class="ctotal">R$ 382,00</span></div>
+      <div class="nfs-row"><span class="pill2">127625</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">VEGA ENERGIA & AUTOMACAO INDUSTRIAL</div><div class="ccnpj">22.563.323/0001-26</div></div><span class="ctotal">R$ 378,00</span></div>
+      <div class="nfs-row"><span class="pill2">98005</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">MTEK ENERGIA SOLAR LTDA</div><div class="ccnpj">34.183.040/0001-38</div></div><span class="ctotal">R$ 376,83</span></div>
+      <div class="nfs-row"><span class="pill2">136150</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AGILE SOLAR LTDA</div><div class="ccnpj">53.464.588/0001-09</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">107371</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SH SOLUCOES TECNOLOGICAS LTDA</div><div class="ccnpj">09.445.760/0001-87</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">119345</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">TEG ENERGIAS RENOVAVEIS LTDA</div><div class="ccnpj">35.302.429/0001-18</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">119062</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SIGMA ENGENHARIA LTDA</div><div class="ccnpj">29.859.676/0001-17</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">105705</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">L E V TECNOLOGIA AMBIENTAL LTDA</div><div class="ccnpj">36.479.098/0001-59</div></div><span class="ctotal">R$ 359,60</span></div>
+      <div class="nfs-row"><span class="pill2">133385</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">HASTE ENGENHARIA E SERVICOS LTDA</div><div class="ccnpj">37.931.716/0001-12</div></div><span class="ctotal">R$ 357,00</span></div>
+      <div class="nfs-row"><span class="pill2">94765</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DASAN SERVICE LTDA</div><div class="ccnpj">11.819.156/0001-15</div></div><span class="ctotal">R$ 357,00</span></div>
+      <div class="nfs-row"><span class="pill2">132758</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">YANNI ENERGIA SOLAR LTDA</div><div class="ccnpj">35.759.969/0001-25</div></div><span class="ctotal">R$ 320,34</span></div>
+      <div class="nfs-row"><span class="pill2">131286</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FHR SOLAR</div><div class="ccnpj">40.801.215/0001-26</div></div><span class="ctotal">R$ 300,00</span></div>
+      <div class="nfs-row"><span class="pill2">130173</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AMAZONIA TECNOLOGIA E ENERGIA RENOVAVEL LTDA</div><div class="ccnpj">02.833.305/0001-00</div></div><span class="ctotal">R$ 299,70</span></div>
+      <div class="nfs-row"><span class="pill2">133200</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">VOLT AMPERE ENERGIA SOLAR LTDA</div><div class="ccnpj">36.853.542/0001-54</div></div><span class="ctotal">R$ 249,90</span></div>
+      <div class="nfs-row"><span class="pill2">114946</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SE MINAS - SOLUCOES EM ENERGIA LTDA</div><div class="ccnpj">22.038.144/0001-70</div></div><span class="ctotal">R$ 165,76</span></div>
+      <div class="nfs-row"><span class="pill2">130854</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUNERGY ENERGIA SOLAR LTDA</div><div class="ccnpj">27.783.243/0001-08</div></div><span class="ctotal">R$ 159,66</span></div>
+      <div class="nfs-row"><span class="pill2">131754</span><span class="pill2">133970</span></div>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- S5: GLOBAL vs PLOOMES COBRANÇA -->
+<div class="sec">
+  <div class="hdr" onclick="tog('s5')">
+    <div class="accent" style="background:#FB923C"></div>
+    <div class="mid"><div class="ttl">Responsável pela cobrança — Global vs Ploomes</div><div class="sub">Tipo de título 31 = cobrança com a Global Cobrança</div></div>
+    <div class="end"><div class="amt">R$ 138.951,64</div><div class="cnt">65 clientes Global · 57 clientes Ploomes</div></div>
+    <span class="arr" id="a-s5">▼</span>
+  </div>
+  <div class="bd" id="s5">
+    <div class="note">Cobranças sob responsabilidade da <b>Global Cobrança</b> e cobranças diretas do <b>Ploomes</b>. Fonte: Sankhya.</div>
+
+    <div class="subsec">
+      <div class="subsec-hdr" onclick="togs('ss_global')">
+        <div class="subsec-title"><span class="tag-global">Global Cobrança</span> <span class="subsec-meta">65 clientes</span></div>
+        <div class="subsec-val">R$&#160;81.164,65 <span class="subsec-arr" id="sa-ss_global">▼</span></div>
+      </div>
+      <div class="subsec-bd" id="ss_global">
+        <div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLARE BIOENERGIA LTDA</div><div class="ccnpj">28.053.504/0001-99</div></div><span class="ctotal">R$ 5.070,00</span></div>
+      <div class="nfs-row"><span class="pill2">104039</span><span class="pill2">106746</span><span class="pill2">110529</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DEYE BRASIL DISTRIBUTION CENTER LTDA</div><div class="ccnpj">51.200.609/0001-45</div></div><span class="ctotal">R$ 4.223,40</span></div>
+      <div class="nfs-row"><span class="pill2">104824</span><span class="pill2">108062</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLLAR INVEST ENERGIAS RENOVAVEIS LTDA</div><div class="ccnpj">43.712.088/0001-87</div></div><span class="ctotal">R$ 4.000,00</span></div>
+      <div class="nfs-row"><span class="pill2">90782</span><span class="pill2">90832</span><span class="pill2">92086</span><span class="pill2">97221</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AMPERE SOLUCOES LTDA</div><div class="ccnpj">41.955.830/0001-50</div></div><span class="ctotal">R$ 3.626,70</span></div>
+      <div class="nfs-row"><span class="pill2">105043</span><span class="pill2">108116</span><span class="pill2">110477</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AP SOLAR LTDA</div><div class="ccnpj">46.402.282/0001-54</div></div><span class="ctotal">R$ 3.346,20</span></div>
+      <div class="nfs-row"><span class="pill2">98283</span><span class="pill2">98290</span><span class="pill2">100831</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ANSELMO B BORGES SERVICOS E COMERCIO LTDA</div><div class="ccnpj">33.900.729/0001-73</div></div><span class="ctotal">R$ 2.697,30</span></div>
+      <div class="nfs-row"><span class="pill2">93170</span><span class="pill2">95826</span><span class="pill2">103400</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AVM ENGENHARIA LTDA</div><div class="ccnpj">34.358.939/0001-44</div></div><span class="ctotal">R$ 2.694,36</span></div>
+      <div class="nfs-row"><span class="pill2">71960</span><span class="pill2">73954</span><span class="pill2">75948</span><span class="pill2">77981</span><span class="pill2">80053</span><span class="pill2">94348</span><span class="pill2">98970</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">INVICTA SOLAR LTDA</div><div class="ccnpj">39.823.412/0001-67</div></div><span class="ctotal">R$ 2.614,05</span></div>
+      <div class="nfs-row"><span class="pill2">97054</span><span class="pill2">112105</span><span class="pill2">115884</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ANGRAENERGY COMERCIO E SERVICOS DE ENERGIA LTDA</div><div class="ccnpj">40.763.406/0001-40</div></div><span class="ctotal">R$ 2.502,00</span></div>
+      <div class="nfs-row"><span class="pill2">90786</span><span class="pill2">90830</span><span class="pill2">90854</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">GMEX GROUP EMPRESARIAL LTDA</div><div class="ccnpj">28.319.896/0001-95</div></div><span class="ctotal">R$ 2.400,00</span></div>
+      <div class="nfs-row"><span class="pill2">91091</span><span class="pill2">91105</span><span class="pill2">93388</span><span class="pill2">95732</span><span class="pill2">100791</span><span class="pill2">103343</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ERS ENERGIA SOLAR LTDA</div><div class="ccnpj">21.665.020/0001-51</div></div><span class="ctotal">R$ 2.148,39</span></div>
+      <div class="nfs-row"><span class="pill2">89277</span><span class="pill2">89280</span><span class="pill2">90730</span><span class="pill2">93345</span><span class="pill2">98212</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DRX COMPANY LTDA</div><div class="ccnpj">46.873.512/0001-63</div></div><span class="ctotal">R$ 2.098,50</span></div>
+      <div class="nfs-row"><span class="pill2">92317</span><span class="pill2">94872</span><span class="pill2">97314</span><span class="pill2">98227</span><span class="pill2">102302</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FESOL ENERGIA SOLAR COMERCIO E SERVICOS LTDA</div><div class="ccnpj">36.461.405/0001-74</div></div><span class="ctotal">R$ 2.065,80</span></div>
+      <div class="nfs-row"><span class="pill2">118850</span><span class="pill2">121529</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLAR CITY BSB COMERCIO E SERVICO LTDA</div><div class="ccnpj">49.060.751/0001-92</div></div><span class="ctotal">R$ 1.758,40</span></div>
+      <div class="nfs-row"><span class="pill2">102410</span><span class="pill2">105140</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ENG MIL EIRELI</div><div class="ccnpj">27.310.207/0001-19</div></div><span class="ctotal">R$ 1.710,00</span></div>
+      <div class="nfs-row"><span class="pill2">90468</span><span class="pill2">90531</span><span class="pill2">91528</span><span class="pill2">94116</span><span class="pill2">99000</span><span class="pill2">101657</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">BRC SOLAR</div><div class="ccnpj">23.093.608/0001-03</div></div><span class="ctotal">R$ 1.680,00</span></div>
+      <div class="nfs-row"><span class="pill2">107683</span><span class="pill2">110312</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">MT SOLAR - LTDA</div><div class="ccnpj">44.702.864/0001-20</div></div><span class="ctotal">R$ 1.662,61</span></div>
+      <div class="nfs-row"><span class="pill2">109595</span><span class="pill2">113404</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">J FERREIRA DA SILVA LTDA</div><div class="ccnpj">13.667.291/0001-18</div></div><span class="ctotal">R$ 1.398,60</span></div>
+      <div class="nfs-row"><span class="pill2">113883</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">A. J. ENERGY SOLAR LTDA</div><div class="ccnpj">48.560.175/0001-80</div></div><span class="ctotal">R$ 1.398,60</span></div>
+      <div class="nfs-row"><span class="pill2">104814</span><span class="pill2">107441</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">JOAO FELIPE RODRIGUES LTDA</div><div class="ccnpj">40.134.613/0001-36</div></div><span class="ctotal">R$ 1.299,00</span></div>
+      <div class="nfs-row"><span class="pill2">87058</span><span class="pill2">89263</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">CLIMA E ENERGIA AR-CONDICIONADO LTDA</div><div class="ccnpj">25.390.769/0001-94</div></div><span class="ctotal">R$ 1.277,19</span></div>
+      <div class="nfs-row"><span class="pill2">62563</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">R R P CARDOSO LTDA</div><div class="ccnpj">31.285.385/0001-04</div></div><span class="ctotal">R$ 1.269,67</span></div>
+      <div class="nfs-row"><span class="pill2">91278</span><span class="pill2">93829</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">GAEL ENERGIA LTDA</div><div class="ccnpj">19.864.490/0001-00</div></div><span class="ctotal">R$ 1.150,46</span></div>
+      <div class="nfs-row"><span class="pill2">107179</span><span class="pill2">110278</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">CONEXAO ENERGIA LTDA</div><div class="ccnpj">15.020.896/0001-48</div></div><span class="ctotal">R$ 1.080,00</span></div>
+      <div class="nfs-row"><span class="pill2">71889</span><span class="pill2">73892</span><span class="pill2">75884</span><span class="pill2">77908</span><span class="pill2">79977</span><span class="pill2">82045</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">BR SOLAR LTDA</div><div class="ccnpj">49.887.072/0001-91</div></div><span class="ctotal">R$ 1.080,00</span></div>
+      <div class="nfs-row"><span class="pill2">90295</span><span class="pill2">90738</span><span class="pill2">92136</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">CARLOS HENRIQUE TORRES SIMINO - MANUTENCAO ELETRICA</div><div class="ccnpj">28.721.776/0001-10</div></div><span class="ctotal">R$ 1.079,10</span></div>
+      <div class="nfs-row"><span class="pill2">90480</span><span class="pill2">90481</span><span class="pill2">91430</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LOCAENERGY LTDA</div><div class="ccnpj">55.675.931/0001-81</div></div><span class="ctotal">R$ 1.074,39</span></div>
+      <div class="nfs-row"><span class="pill2">103478</span><span class="pill2">108196</span><span class="pill2">123477</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">D CARLOS RIGGO SERVICOS ELETRICOS LTDA</div><div class="ccnpj">33.387.058/0001-99</div></div><span class="ctotal">R$ 1.032,00</span></div>
+      <div class="nfs-row"><span class="pill2">106120</span><span class="pill2">108747</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DLX ENERGIA SOLAR LTDA</div><div class="ccnpj">22.793.672/0001-34</div></div><span class="ctotal">R$ 999,00</span></div>
+      <div class="nfs-row"><span class="pill2">123635</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">M SERGIO DE OLIVEIRA - REPRESENTACOES</div><div class="ccnpj">23.922.758/0001-82</div></div><span class="ctotal">R$ 986,40</span></div>
+      <div class="nfs-row"><span class="pill2">89897</span><span class="pill2">92349</span><span class="pill2">97334</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLLTECH ENERGIA SOLAR EIRELI</div><div class="ccnpj">36.716.838/0001-23</div></div><span class="ctotal">R$ 973,00</span></div>
+      <div class="nfs-row"><span class="pill2">92397</span><span class="pill2">104635</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUNERGY SOLAR LTDA</div><div class="ccnpj">35.964.913/0001-02</div></div><span class="ctotal">R$ 919,68</span></div>
+      <div class="nfs-row"><span class="pill2">91161</span><span class="pill2">100376</span><span class="pill2">102897</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">BDL COMERCIAL IMPORTADORA E EXPORTADORA LTDA</div><div class="ccnpj">23.792.191/0001-77</div></div><span class="ctotal">R$ 840,00</span></div>
+      <div class="nfs-row"><span class="pill2">107682</span><span class="pill2">107684</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">NEXA ENERGIA SOLAR E ENGENHARIA LTDA</div><div class="ccnpj">35.339.576/0001-62</div></div><span class="ctotal">R$ 802,74</span></div>
+      <div class="nfs-row"><span class="pill2">113914</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">123 SOLAR ALTA FLORESTA LTDA</div><div class="ccnpj">48.367.729/0001-27</div></div><span class="ctotal">R$ 779,40</span></div>
+      <div class="nfs-row"><span class="pill2">105891</span><span class="pill2">111185</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">M L MOREIRA LTDA</div><div class="ccnpj">46.511.724/0001-09</div></div><span class="ctotal">R$ 779,40</span></div>
+      <div class="nfs-row"><span class="pill2">105570</span><span class="pill2">106580</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">3P ENGENHARIA LTDA</div><div class="ccnpj">53.724.559/0001-20</div></div><span class="ctotal">R$ 774,00</span></div>
+      <div class="nfs-row"><span class="pill2">123038</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLAR ADVANCE ENERGIA SOLAR FOTOVOLTAICA LTDA</div><div class="ccnpj">19.811.112/0001-50</div></div><span class="ctotal">R$ 758,13</span></div>
+      <div class="nfs-row"><span class="pill2">92708</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">N E N INSTALACAO E MANUTENCAO ELETRICA LTDA.</div><div class="ccnpj">27.443.471/0001-20</div></div><span class="ctotal">R$ 719,40</span></div>
+      <div class="nfs-row"><span class="pill2">106207</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AURINKKO ENERGIA E TECNOLOGIA</div><div class="ccnpj">32.732.114/0001-12</div></div><span class="ctotal">R$ 714,00</span></div>
+      <div class="nfs-row"><span class="pill2">90618</span><span class="pill2">93116</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">R S DE ARAUJO JUNIOR - SMA ENERGY SOLUTIONS</div><div class="ccnpj">41.705.717/0001-16</div></div><span class="ctotal">R$ 659,40</span></div>
+      <div class="nfs-row"><span class="pill2">99428</span><span class="pill2">102007</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">JOAO PEDRO GOMES ALBUQUERQUE</div><div class="ccnpj">53.419.781/0001-10</div></div><span class="ctotal">R$ 649,50</span></div>
+      <div class="nfs-row"><span class="pill2">122169</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FF GRANSOLAR ENGENHARIA LTDA</div><div class="ccnpj">34.164.473/0001-46</div></div><span class="ctotal">R$ 645,00</span></div>
+      <div class="nfs-row"><span class="pill2">124779</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">RP ENERGIA RENOVAVEL LTDA</div><div class="ccnpj">27.252.123/0001-76</div></div><span class="ctotal">R$ 630,00</span></div>
+      <div class="nfs-row"><span class="pill2">120929</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ALVES SOLAR ENERGY LTDA</div><div class="ccnpj">47.815.149/0001-92</div></div><span class="ctotal">R$ 600,00</span></div>
+      <div class="nfs-row"><span class="pill2">107922</span><span class="pill2">108117</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ENERGIZE FOTOVOLTAICO LTDA</div><div class="ccnpj">12.367.788/0001-58</div></div><span class="ctotal">R$ 599,50</span></div>
+      <div class="nfs-row"><span class="pill2">93212</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">EVOLUSOL ENERGIA SOLAR LTDA</div><div class="ccnpj">40.062.597/0002-02</div></div><span class="ctotal">R$ 599,50</span></div>
+      <div class="nfs-row"><span class="pill2">111128</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">CEARA ENERGY SOLUCOES EM ENERGIAS LTDA</div><div class="ccnpj">34.092.904/0001-06</div></div><span class="ctotal">R$ 599,40</span></div>
+      <div class="nfs-row"><span class="pill2">93452</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">RODRIGO FREITAS COELHO</div><div class="ccnpj">28.554.323/0001-46</div></div><span class="ctotal">R$ 519,60</span></div>
+      <div class="nfs-row"><span class="pill2">109444</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LEAO SOLAR LTDA</div><div class="ccnpj">54.671.389/0001-26</div></div><span class="ctotal">R$ 479,60</span></div>
+      <div class="nfs-row"><span class="pill2">98119</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PHP SOLAR LTDA</div><div class="ccnpj">47.660.052/0001-58</div></div><span class="ctotal">R$ 450,00</span></div>
+      <div class="nfs-row"><span class="pill2">101363</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FERREIRA LEITE COMERCIO E SERVICOS LTDA</div><div class="ccnpj">38.210.932/0001-31</div></div><span class="ctotal">R$ 438,90</span></div>
+      <div class="nfs-row"><span class="pill2">89214</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SAMUEL MENDES DIAS 43323300807</div><div class="ccnpj">41.732.904/0001-99</div></div><span class="ctotal">R$ 427,49</span></div>
+      <div class="nfs-row"><span class="pill2">93906</span><span class="pill2">119758</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LUX ECO SOLUTIONS E ENERGY LTDA</div><div class="ccnpj">51.726.687/0001-88</div></div><span class="ctotal">R$ 400,00</span></div>
+      <div class="nfs-row"><span class="pill2">120976</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LS PROJETOS E CONSTRUCOES LTDA</div><div class="ccnpj">24.989.673/0001-84</div></div><span class="ctotal">R$ 397,49</span></div>
+      <div class="nfs-row"><span class="pill2">96984</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LWL ENERGIA SOLAR E INSTALACAO ELETRICA LTDA</div><div class="ccnpj">57.074.787/0001-53</div></div><span class="ctotal">R$ 389,70</span></div>
+      <div class="nfs-row"><span class="pill2">97261</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">37.765.413 ISLA CARLA REGO SANTOS</div><div class="ccnpj">37.765.413/0001-77</div></div><span class="ctotal">R$ 387,00</span></div>
+      <div class="nfs-row"><span class="pill2">121753</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">TM ENERGIA SOLAR LTDA</div><div class="ccnpj">11.828.665/0001-04</div></div><span class="ctotal">R$ 387,00</span></div>
+      <div class="nfs-row"><span class="pill2">112162</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">VEGA ENERGIA & AUTOMACAO INDUSTRIAL</div><div class="ccnpj">22.563.323/0001-26</div></div><span class="ctotal">R$ 378,00</span></div>
+      <div class="nfs-row"><span class="pill2">98005</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SH SOLUCOES TECNOLOGICAS LTDA</div><div class="ccnpj">09.445.760/0001-87</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">119345</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AGILE SOLAR LTDA</div><div class="ccnpj">53.464.588/0001-09</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">107371</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">TEG ENERGIAS RENOVAVEIS LTDA</div><div class="ccnpj">35.302.429/0001-18</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">119062</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SIGMA ENGENHARIA LTDA</div><div class="ccnpj">29.859.676/0001-17</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">105705</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">HASTE ENGENHARIA E SERVICOS LTDA</div><div class="ccnpj">37.931.716/0001-12</div></div><span class="ctotal">R$ 357,00</span></div>
+      <div class="nfs-row"><span class="pill2">94765</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">VOLT AMPERE ENERGIA SOLAR LTDA</div><div class="ccnpj">36.853.542/0001-54</div></div><span class="ctotal">R$ 249,90</span></div>
+      <div class="nfs-row"><span class="pill2">114946</span></div>
+    </div>
+      </div>
+    </div>
+
+    <div class="subsec">
+      <div class="subsec-hdr" onclick="togs('ss_ploomes_cob')">
+        <div class="subsec-title"><span class="tag-ploomes">Cobrança Ploomes</span> <span class="subsec-meta">57 clientes</span></div>
+        <div class="subsec-val">R$&#160;57.786,99 <span class="subsec-arr" id="sa-ss_ploomes_cob">▼</span></div>
+      </div>
+      <div class="subsec-bd" id="ss_ploomes_cob">
+        <div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">R.V. ENERGIA COMERCIO DE EQUIPAMENTOS ELETRICOS LTDA</div><div class="ccnpj">36.157.179/0001-32</div></div><span class="ctotal">R$ 17.591,24</span></div>
+      <div class="nfs-row"><span class="pill2">136127</span><span class="pill2">136277</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUNHUB</div><div class="ccnpj">41.356.091/0001-80</div></div><span class="ctotal">R$ 2.578,00</span></div>
+      <div class="nfs-row"><span class="pill2">122955</span><span class="pill2">125407</span><span class="pill2">125636</span><span class="pill2">128061</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLARIUM ENERGIA SOLAR PIUMHI LTDA</div><div class="ccnpj">35.770.526/0001-35</div></div><span class="ctotal">R$ 2.340,03</span></div>
+      <div class="nfs-row"><span class="pill2">127538</span><span class="pill2">130091</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">Z L ENGENHARIA ELETRICA LTDA</div><div class="ccnpj">31.719.401/0001-20</div></div><span class="ctotal">R$ 1.698,30</span></div>
+      <div class="nfs-row"><span class="pill2">134321</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">EFICIENCIA ENERGETICA LTDA</div><div class="ccnpj">31.418.206/0001-60</div></div><span class="ctotal">R$ 1.617,19</span></div>
+      <div class="nfs-row"><span class="pill2">132115</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">C S SIMOES ENERGIA SOLAR</div><div class="ccnpj">24.477.429/0001-32</div></div><span class="ctotal">R$ 1.490,00</span></div>
+      <div class="nfs-row"><span class="pill2">132224</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ADEMISOL ENGENHARIA E ENERGIA SOLAR LTDA</div><div class="ccnpj">55.455.864/0001-90</div></div><span class="ctotal">R$ 1.451,40</span></div>
+      <div class="nfs-row"><span class="pill2">124723</span><span class="pill2">127128</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ILUMINA ENERGIA SOLAR</div><div class="ccnpj">34.858.785/0001-50</div></div><span class="ctotal">R$ 1.352,30</span></div>
+      <div class="nfs-row"><span class="pill2">133703</span><span class="pill2">135158</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">TEUSOLAR ENERGIA FOTOVOLTAICA LTDA</div><div class="ccnpj">55.171.465/0001-05</div></div><span class="ctotal">R$ 1.253,52</span></div>
+      <div class="nfs-row"><span class="pill2">130401</span><span class="pill2">133120</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LR ENERGIA SOLAR LTDA</div><div class="ccnpj">34.192.715/0001-05</div></div><span class="ctotal">R$ 1.200,00</span></div>
+      <div class="nfs-row"><span class="pill2">127692</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ECOTOP ENERGIA RENOVAVEIS LTDA</div><div class="ccnpj">41.350.947/0001-00</div></div><span class="ctotal">R$ 1.174,69</span></div>
+      <div class="nfs-row"><span class="pill2">134101</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">3F ENERGY SOLUCOES EM INSTALACOES ELETRICAS LTDA</div><div class="ccnpj">41.975.410/0001-35</div></div><span class="ctotal">R$ 1.171,68</span></div>
+      <div class="nfs-row"><span class="pill2">122271</span><span class="pill2">124593</span><span class="pill2">127281</span><span class="pill2">129990</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">STORM ELETRICA LTDA</div><div class="ccnpj">45.029.414/0001-81</div></div><span class="ctotal">R$ 1.039,20</span></div>
+      <div class="nfs-row"><span class="pill2">134157</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SOLARM PROJETOS E INSTALACOES DE SISTEMAS FOTOVOLTAICOS SOCIEDADE UNIPESSO</div><div class="ccnpj">24.476.088/0001-80</div></div><span class="ctotal">R$ 1.007,76</span></div>
+      <div class="nfs-row"><span class="pill2">135251</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PLANTAE SOLUCOES LTDA</div><div class="ccnpj">38.927.884/0001-05</div></div><span class="ctotal">R$ 990,00</span></div>
+      <div class="nfs-row"><span class="pill2">133434</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">NOROESTE ENERGIA SOLAR E SOLUCOES ELETRICAS LTDA</div><div class="ccnpj">34.875.459/0001-50</div></div><span class="ctotal">R$ 990,00</span></div>
+      <div class="nfs-row"><span class="pill2">137028</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">GREENERGY COMERCIO E SERVICOS LTDA</div><div class="ccnpj">30.930.114/0001-00</div></div><span class="ctotal">R$ 839,30</span></div>
+      <div class="nfs-row"><span class="pill2">136605</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FERREIRA LEITE COMERCIO E SERVICOS LTDA</div><div class="ccnpj">38.210.932/0001-31</div></div><span class="ctotal">R$ 832,08</span></div>
+      <div class="nfs-row"><span class="pill2">136790</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ECOBOX SOLUCOES ENERGETICAS LTDA</div><div class="ccnpj">30.815.626/0001-17</div></div><span class="ctotal">R$ 750,00</span></div>
+      <div class="nfs-row"><span class="pill2">130987</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">GLOBAL SOLAR LTDA</div><div class="ccnpj">27.741.758/0001-37</div></div><span class="ctotal">R$ 726,63</span></div>
+      <div class="nfs-row"><span class="pill2">133681</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">T BISPO DA CONCEICAO</div><div class="ccnpj">31.541.650/0001-78</div></div><span class="ctotal">R$ 723,30</span></div>
+      <div class="nfs-row"><span class="pill2">133058</span><span class="pill2">134931</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUN POWER SOLUCOES RENOVAVEIS LTDA</div><div class="ccnpj">21.041.325/0001-92</div></div><span class="ctotal">R$ 720,00</span></div>
+      <div class="nfs-row"><span class="pill2">131664</span><span class="pill2">134069</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ILUMISAM ENERGIA SOLAR LTDA</div><div class="ccnpj">28.714.063/0001-29</div></div><span class="ctotal">R$ 720,00</span></div>
+      <div class="nfs-row"><span class="pill2">125899</span><span class="pill2">128560</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">VERT ENERGIE COMERCIO E SERVICOS ELETRICOS LTDA</div><div class="ccnpj">45.517.241/0001-40</div></div><span class="ctotal">R$ 695,52</span></div>
+      <div class="nfs-row"><span class="pill2">132849</span><span class="pill2">134909</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">MULTI+ ENGENHARIA LTDA</div><div class="ccnpj">49.783.337/0001-01</div></div><span class="ctotal">R$ 599,50</span></div>
+      <div class="nfs-row"><span class="pill2">136482</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FRANCO SOLAR ENGENHARIA LTDA</div><div class="ccnpj">30.095.615/0001-00</div></div><span class="ctotal">R$ 597,54</span></div>
+      <div class="nfs-row"><span class="pill2">125113</span><span class="pill2">127793</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">D. H. Z. SOLUCOES ELETRICAS LTDA.</div><div class="ccnpj">37.485.842/0001-90</div></div><span class="ctotal">R$ 594,00</span></div>
+      <div class="nfs-row"><span class="pill2">137150</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ENEX ENERGIA SOLAR LTDA</div><div class="ccnpj">40.317.354/0001-89</div></div><span class="ctotal">R$ 594,00</span></div>
+      <div class="nfs-row"><span class="pill2">130460</span><span class="pill2">133173</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PROJETO ENERGIA</div><div class="ccnpj">31.780.774/0001-06</div></div><span class="ctotal">R$ 549,25</span></div>
+      <div class="nfs-row"><span class="pill2">136632</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ASS ENGENHARIA LTDA</div><div class="ccnpj">23.485.083/0001-51</div></div><span class="ctotal">R$ 499,50</span></div>
+      <div class="nfs-row"><span class="pill2">126388</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">INSTALTECH</div><div class="ccnpj">12.932.797/0001-44</div></div><span class="ctotal">R$ 495,00</span></div>
+      <div class="nfs-row"><span class="pill2">125868</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">META SUN INSTALACOES ELETRICAS LTDA</div><div class="ccnpj">41.452.412/0001-40</div></div><span class="ctotal">R$ 479,60</span></div>
+      <div class="nfs-row"><span class="pill2">137168</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUN COAST MATERIAIS ELETRICOS E ENERGIA SOLAR LTDA</div><div class="ccnpj">47.864.839/0001-31</div></div><span class="ctotal">R$ 468,90</span></div>
+      <div class="nfs-row"><span class="pill2">125922</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">EXPRESSAO SOLAR MATERIAIS ELETRICOS LTDA</div><div class="ccnpj">22.415.628/0001-90</div></div><span class="ctotal">R$ 450,00</span></div>
+      <div class="nfs-row"><span class="pill2">133850</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PRO SOLAR INSTALACOES E MANUTENCAO DE EQUIPAMENTOS ELET</div><div class="ccnpj">33.333.259/0001-03</div></div><span class="ctotal">R$ 408,51</span></div>
+      <div class="nfs-row"><span class="pill2">135157</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DIRECT SOLAR FOTOVOLTAICO LTDA</div><div class="ccnpj">42.268.999/0001-02</div></div><span class="ctotal">R$ 407,46</span></div>
+      <div class="nfs-row"><span class="pill2">135195</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">BARBOSA E BARBOSA ENGENHARIA ELETRICA LTDA</div><div class="ccnpj">02.309.061/0001-60</div></div><span class="ctotal">R$ 389,70</span></div>
+      <div class="nfs-row"><span class="pill2">137759</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">LS PROJETOS E CONSTRUCOES LTDA</div><div class="ccnpj">24.989.673/0001-84</div></div><span class="ctotal">R$ 389,70</span></div>
+      <div class="nfs-row"><span class="pill2">137151</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">JOAO PEDRO GOMES ALBUQUERQUE</div><div class="ccnpj">53.419.781/0001-10</div></div><span class="ctotal">R$ 389,70</span></div>
+      <div class="nfs-row"><span class="pill2">124605</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">PANTANAL ENGENHARIA LTDA</div><div class="ccnpj">27.109.572/0001-60</div></div><span class="ctotal">R$ 389,70</span></div>
+      <div class="nfs-row"><span class="pill2">133463</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">47.590.677 ANA KEZIA DE LIMA SILVA</div><div class="ccnpj">47.590.677/0001-90</div></div><span class="ctotal">R$ 382,00</span></div>
+      <div class="nfs-row"><span class="pill2">127625</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">MTEK ENERGIA SOLAR LTDA</div><div class="ccnpj">34.183.040/0001-38</div></div><span class="ctotal">R$ 376,83</span></div>
+      <div class="nfs-row"><span class="pill2">136150</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">N SOL FRANCHISING E LICENCIAMENTO LTDA</div><div class="ccnpj">56.152.186/0001-59</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">137237</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">TESLEN SOLUCOES EM ENERGIA LTDA</div><div class="ccnpj">50.875.637/0001-08</div></div><span class="ctotal">R$ 359,70</span></div>
+      <div class="nfs-row"><span class="pill2">128263</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">L E V TECNOLOGIA AMBIENTAL LTDA</div><div class="ccnpj">36.479.098/0001-59</div></div><span class="ctotal">R$ 359,60</span></div>
+      <div class="nfs-row"><span class="pill2">133385</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">RENOVAVEL FOTOVOLTAICO</div><div class="ccnpj">42.219.869/0001-71</div></div><span class="ctotal">R$ 357,00</span></div>
+      <div class="nfs-row"><span class="pill2">136633</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">50.983.114 MARIO FABIO GOMES DE QUEIROZ PIERRE JUNIOR</div><div class="ccnpj">50.983.114/0001-77</div></div><span class="ctotal">R$ 357,00</span></div>
+      <div class="nfs-row"><span class="pill2">127965</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">DASAN SERVICE LTDA</div><div class="ccnpj">11.819.156/0001-15</div></div><span class="ctotal">R$ 357,00</span></div>
+      <div class="nfs-row"><span class="pill2">132758</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ARUNA ENERGIA</div><div class="ccnpj">26.186.708/0001-72</div></div><span class="ctotal">R$ 354,00</span></div>
+      <div class="nfs-row"><span class="pill2">136264</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">YANNI ENERGIA SOLAR LTDA</div><div class="ccnpj">35.759.969/0001-25</div></div><span class="ctotal">R$ 320,34</span></div>
+      <div class="nfs-row"><span class="pill2">131286</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">FHR SOLAR</div><div class="ccnpj">40.801.215/0001-26</div></div><span class="ctotal">R$ 300,00</span></div>
+      <div class="nfs-row"><span class="pill2">130173</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">ALESSANDRO ROGERIO JUNIOR</div><div class="ccnpj">35.432.562/0001-99</div></div><span class="ctotal">R$ 299,70</span></div>
+      <div class="nfs-row"><span class="pill2">133782</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">AMAZONIA TECNOLOGIA E ENERGIA RENOVAVEL LTDA</div><div class="ccnpj">02.833.305/0001-00</div></div><span class="ctotal">R$ 299,70</span></div>
+      <div class="nfs-row"><span class="pill2">133200</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">B3N LTDA</div><div class="ccnpj">57.183.803/0001-46</div></div><span class="ctotal">R$ 225,00</span></div>
+      <div class="nfs-row"><span class="pill2">134224</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SE MINAS - SOLUCOES EM ENERGIA LTDA</div><div class="ccnpj">22.038.144/0001-70</div></div><span class="ctotal">R$ 165,76</span></div>
+      <div class="nfs-row"><span class="pill2">130854</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">SUNERGY ENERGIA SOLAR LTDA</div><div class="ccnpj">27.783.243/0001-08</div></div><span class="ctotal">R$ 159,66</span></div>
+      <div class="nfs-row"><span class="pill2">131754</span><span class="pill2">133970</span></div>
+    </div><div class="cblock2">
+      <div class="chead"><div class="chead-left"><div class="cname">19.332.713 DANILO DE OLIVEIRA LIMA</div><div class="ccnpj">19.332.713/0001-80</div></div><span class="ctotal">R$ 99,80</span></div>
+      <div class="nfs-row"><span class="pill2">134062</span></div>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<div class="rec">
+  <div class="rec-title">Reconciliação da divergência</div>
+  <div class="rr2"><div class="rl2">Títulos com baixa indevida no Ploomes</div><div class="rv n">− R$ 3.663,83</div></div>
+  <div class="rr2"><div class="rl2">Clientes sem categorização Sunhub</div><div class="rv n">− R$ 2.644,18</div></div>
+  <div class="rr2"><div class="rl2">Renegociações apenas no Ploomes</div><div class="rv p">+ R$ 6.350,30</div></div>
+  <div class="rr2"><div class="rl2">NF 93906 — Sankhya com 3 parcelas vs Ploomes com 1</div><div class="rv n">− R$ 224,55</div></div>
+  <div class="rr2"><div class="rl2">Demais NFs comuns com valor divergente</div><div class="rv p">+ R$ 569,35</div></div>
+  <div class="rr2 tot"><div class="rl2">Divergência total explicada</div><div class="rv tot">R$ 387,09 ✓</div></div>
+</div>
+
+<div class="footer">Ploomes · Relatório de Inadimplência</div>
+
+</div>
+<script>
+function tog(id){var b=document.getElementById(id);var a=document.getElementById('a-'+id);var o=b.classList.toggle('vis');a.classList.toggle('open',o)}
+function togr(id){var b=document.getElementById(id);var a=document.getElementById('ra-'+id);var o=b.classList.toggle('vis');a.classList.toggle('open',o)}
+
+function togs(id){var b=document.getElementById(id);var a=document.getElementById('sa-'+id);var o=b.classList.toggle('vis');a.classList.toggle('open',o)}
+
+</script>
+</body>
+</html>
